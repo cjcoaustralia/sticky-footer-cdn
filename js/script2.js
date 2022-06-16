@@ -2,25 +2,37 @@
 var company_name = "The Demo Company";
 var call = "(07) 4012 4526";
 var email = "info@demomail.com";
-var whatsapp = "(07) 4012 4526";
+var whatsapp = "(07) 4012 4533";
 
 // colors
 var primary_btn_color = '#FFC521';
 var primary_color = '#000000';
 
 // First icon
-var whatsappIcon = 'images/icons/whatsapp.png';
-var callIconImg = 'images/icons/call.png';
-var emailIcon = 'images/icons/email.png';
+var iconPath = 'https://cdn.jsdelivr.net/gh/cjcoaustralia/sticky-footer-cdn/images/icons';
+var whatsappIconImg = `${iconPath}/whatsapp-light.png`;
+var callIconImg = `${iconPath}/call.png`;
+var emailIconImg = `${iconPath}/email-light.png`;
+var cancelIconImg = `${iconPath}/cancel.png`;
+
+// Maximum window size (px)
+var window_size = 768; 
+
+//Buttons format
+var contactFormat = ["whatsapp", "call", "email"];
+
+// ------------------------------------------------------- Options -------------------------------------------------------------- //
 
 // Window size
-let mql = window.matchMedia('(max-width: 768px)');
-
-var whatsapp = whatsapp.replace(/[- )(]/g,'');
+let mql = window.matchMedia(`(max-width: ${window_size}px)`);
 
 var animeScript = document.createElement('script');  
 animeScript.setAttribute('src','https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.js');
 document.head.appendChild(animeScript);
+
+var whatsapp = whatsapp.replace(/[- )(]/g,'');
+
+var contactSize, contactIconUrl, contactUrl, contactType, contactText;
 
 function addStickyFooter(){
 
@@ -31,30 +43,39 @@ function addStickyFooter(){
 	const stickyContainerList = document.createElement('ul');
 	stickyContainerList.classList = 'sticky__footer_list';
 
-	for (var i = 1; i <= 3; i++) {
+	if (whatsapp.length) {
+		contactSize = 3;
+	}else{
+		contactSize = 2;
+		contactFormat = contactFormat.filter(e => e !== 'whatsapp');
+	}
+
+	for (var i = 1; i <= contactSize; i++) {
 		let SFLinkListItem = document.createElement('li');
 		let SFLinkListItemLink = document.createElement('a');
 		let SFLinkListItemIcon = document.createElement('img');
 		let SFLinkListItemText = document.createElement('p');
-		if (i == 1) {
-			SFLinkListItemLink.setAttribute('href', `https://api.whatsapp.com/send?phone=${whatsapp}`);
+
+		contactType = contactFormat[i-1];
+		contactIconUrl = eval(`${contactType}IconImg`);
+		
+		if (contactType == "whatsapp") {
+			contactUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
 			SFLinkListItemLink.setAttribute('target', '_blank');
-			SFLinkListItemIcon.setAttribute('src', whatsappIcon);
-			SFLinkListItemText.innerHTML = "Whatsapp";
-		}
-		if (i == 2) {
-			SFLinkListItemLink.setAttribute('href', `tel:${call}`);
-			SFLinkListItemIcon.setAttribute('src', callIconImg);
-			SFLinkListItemText.innerHTML = `Call Us`;
-			// SFLinkListItemText.innerHTML = `Call Us ${call}`;
-		}
-		if (i == 3) {
-			SFLinkListItemLink.setAttribute('href', `mailto:${email}`);
+			SFLinkListItemText.innerHTML = contactType;
+		}else if(contactType == "call") {
+			contactUrl = `tel:${call}`;
+			SFLinkListItemText.innerHTML = "Call Us";
+		}else if(contactType == "email") {
+			contactUrl = `mailto:${email}`;
 			SFLinkListItemLink.setAttribute('target', '_blank');
-			SFLinkListItemIcon.setAttribute('src', emailIcon);
 			SFLinkListItemText.innerHTML = "Email Us";
 		}
-		SFLinkListItem.classList = `sticky__footer_list_item sticky__footer_list_item_${i}`;
+
+		SFLinkListItemLink.setAttribute('href', contactUrl);
+		SFLinkListItemIcon.setAttribute('src', contactIconUrl);
+
+		SFLinkListItem.classList = `sticky__footer_list_item sticky__footer_list_item_${i} sticky__footer_list_item_${contactType}`;
 		SFLinkListItem.append(SFLinkListItemLink);
 		SFLinkListItemLink.append(SFLinkListItemIcon);
 		SFLinkListItemLink.append(SFLinkListItemText);
@@ -115,13 +136,14 @@ function addStickyFooter(){
 		// List text styles
 	    fontSize: '14px',
 	    fontWeight: '500',
-	    color: '#000000'
+	    color: '#000000',
+	    textTransform: 'capitalize'
 	}, {
 		// popup link styles - whatsapp
 	    backgroundColor: '#46C756',
 	}, {
 		// popup link icon styles - whatsapp
-	    filter: 'invert(1)'
+	    // filter: 'invert(1)'
 	}, {
 		// popup link styles - call
 	    backgroundColor: primary_btn_color,
@@ -133,7 +155,7 @@ function addStickyFooter(){
 	    backgroundColor: '#000000',
 	}, {
 		// popup link icon styles - mail
-	    filter: 'invert(1)'
+	    // filter: 'invert(1)'
 	}];
 
 	Object.assign(stickyContainer.style, styles[0]);
@@ -147,17 +169,19 @@ function addStickyFooter(){
 		Object.assign(el.querySelector('a p').style, styles[5]);
 	})
 
-	Object.assign(document.querySelector('.sticky__footer_list_item_1 a').style, styles[6]);
-	Object.assign(document.querySelector('.sticky__footer_list_item_1 a img').style, styles[7]);
-	document.querySelector('.sticky__footer_list_item_1 a p').style.color = '#ffffff';
+	if (whatsapp.length) {
+		Object.assign(document.querySelector('.sticky__footer_list_item_whatsapp a').style, styles[6]);
+		Object.assign(document.querySelector('.sticky__footer_list_item_whatsapp a img').style, styles[7]);
+		document.querySelector('.sticky__footer_list_item_whatsapp a p').style.color = '#ffffff';
+	}
 
-	Object.assign(document.querySelector('.sticky__footer_list_item_2 a').style, styles[8]);
-	Object.assign(document.querySelector('.sticky__footer_list_item_2 a img').style, styles[9]);
-	Object.assign(document.querySelector('.sticky__footer_list_item_2 a p').style, styles[5]);
+	Object.assign(document.querySelector('.sticky__footer_list_item_call a').style, styles[8]);
+	Object.assign(document.querySelector('.sticky__footer_list_item_call a img').style, styles[9]);
+	Object.assign(document.querySelector('.sticky__footer_list_item_call a p').style, styles[5]);
 
-	Object.assign(document.querySelector('.sticky__footer_list_item_3 a').style, styles[10]);
-	Object.assign(document.querySelector('.sticky__footer_list_item_3 a img').style, styles[11]);
-	document.querySelector('.sticky__footer_list_item_3 a p').style.color = '#ffffff';
+	Object.assign(document.querySelector('.sticky__footer_list_item_email a').style, styles[10]);
+	Object.assign(document.querySelector('.sticky__footer_list_item_email a img').style, styles[11]);
+	document.querySelector('.sticky__footer_list_item_email a p').style.color = '#ffffff';
 
 	setTimeout(()=>{
 		anime({
