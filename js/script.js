@@ -2,26 +2,37 @@
 var company_name = "The Demo Company";
 var call = "(07) 4012 4526";
 var email = "info@demomail.com";
-var whatsapp = "(07) 4012 4526";
+var whatsapp = "(07) 4012 4533";
 
 // colors
 var primary_btn_color = '#FFC521';
 var primary_color = '#000000';
 
 // First icon
-var whatsappIcon = 'images/icons/whatsapp.png';
-var callIconImg = 'images/icons/call.png';
-var emailIcon = 'images/icons/email.png';
-var cancelIcon = 'images/icons/cancel.png';
+var iconPath = 'https://cdn.jsdelivr.net/gh/cjcoaustralia/sticky-footer-cdn/images/icons';
+var whatsappIconImg = `${iconPath}/whatsapp-light.png`;
+var callIconImg = `${iconPath}/call.png`;
+var emailIconImg = `${iconPath}/email-light.png`;
+var cancelIconImg = `${iconPath}/cancel.png`;
+
+// Maximum window size (px)
+var window_size = 768; 
+
+//Buttons format
+var contactFormat = ["whatsapp", "call", "email"];
+
+// ------------------------------------------------------- Options -------------------------------------------------------------- //
 
 // Window size
-let mql = window.matchMedia('(max-width: 768px)');
+let mql = window.matchMedia(`(max-width: ${window_size}px)`);
 
 var animeScript = document.createElement('script');  
 animeScript.setAttribute('src','https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.js');
 document.head.appendChild(animeScript);
 
-var whatsapp = whatsapp.replace(/[- )(]/g,'');
+whatsapp = whatsapp.replace(/[- )(]/g,'');
+
+var contactSize, contactIconUrl, contactUrl, contactType;
 
 function addStickyFooter(){
 
@@ -61,26 +72,37 @@ function addStickyFooter(){
 	SFPopUp.append(popUpHeader);
 	SFPopUp.append(popUpText);
 	SFPopUp.append(SFLinkList);
+	
+	if (whatsapp.length) {
+		contactSize = 3;
+	}else{
+		contactSize = 2;
+		contactFormat = contactFormat.filter(e => e !== 'whatsapp');
+	}
 
-	for (var i = 1; i <= 3; i++) {
+	//console.log(contactFormat);
+
+	for (var i = 1; i <= contactSize; i++) {
 		let SFLinkListItem = document.createElement('li');
 		let SFLinkListItemLink = document.createElement('a');
 		let SFLinkListItemIcon = document.createElement('img');
-		if (i == 1) {
-			SFLinkListItemLink.setAttribute('href', `https://api.whatsapp.com/send?phone=${whatsapp}`);
+
+		contactType = contactFormat[i-1];
+		contactIconUrl = eval(`${contactType}IconImg`);
+
+		if (contactType == "whatsapp") {
+			contactUrl = `https://api.whatsapp.com/send?phone=${whatsapp}`;
 			SFLinkListItemLink.setAttribute('target', '_blank');
-			SFLinkListItemIcon.setAttribute('src', whatsappIcon);
-		}
-		if (i == 2) {
-			SFLinkListItemLink.setAttribute('href', `tel:${call}`);
-			SFLinkListItemIcon.setAttribute('src', callIconImg);
-		}
-		if (i == 3) {
-			SFLinkListItemLink.setAttribute('href', `mailto:${email}`);
+		}else if(contactType == "call") {
+			contactUrl = `tel:${call}`;
+		}else if(contactType == "email") {
+			contactUrl = `mailto:${email}`;
 			SFLinkListItemLink.setAttribute('target', '_blank');
-			SFLinkListItemIcon.setAttribute('src', emailIcon);
 		}
-		SFLinkListItem.classList = `sticky__footer_popup_list sticky__footer_list_${i}`;
+
+		SFLinkListItemLink.setAttribute('href', contactUrl);
+		SFLinkListItemIcon.setAttribute('src', contactIconUrl);
+		SFLinkListItem.classList = `sticky__footer_popup_list sticky__footer_list_${i} sticky__footer_list_${contactType}`;
 		SFLinkListItem.append(SFLinkListItemLink);
 		SFLinkListItemLink.append(SFLinkListItemIcon);
 		SFLinkList.append(SFLinkListItem);
@@ -168,8 +190,9 @@ function addStickyFooter(){
 		// popup ul styles
 		width: '100%',
 	    display: 'flex',
-	    justifyContent: 'space-around',
+	    justifyContent: 'center',
 	    alignItems: 'center',
+	    gap: '22px',
 	}, {
 		// popup li styles
 	    display: 'block',
@@ -192,7 +215,7 @@ function addStickyFooter(){
 	    backgroundColor: '#46C756',
 	}, {
 		// popup link icon styles - whatsapp
-	    filter: 'invert(1)'
+	    // filter: 'invert(1)'
 	}, {
 		// popup link styles - call
 	    backgroundColor: primary_btn_color,
@@ -204,7 +227,7 @@ function addStickyFooter(){
 	    backgroundColor: '#000000',
 	}, {
 		// popup link icon styles - mail
-	    filter: 'invert(1)'
+	    // filter: 'invert(1)'
 	}, {
 		// ripple 1
 		width: '80%',
@@ -245,12 +268,14 @@ function addStickyFooter(){
 		Object.assign(el.querySelector('a').style, styles[9]);
 		Object.assign(el.querySelector('a img').style, styles[10]);
 	})
-	Object.assign(document.querySelector('.sticky__footer_list_1 a').style, styles[11]);
-	Object.assign(document.querySelector('.sticky__footer_list_1 a img').style, styles[12]);
-	Object.assign(document.querySelector('.sticky__footer_list_2 a').style, styles[13]);
-	Object.assign(document.querySelector('.sticky__footer_list_2 a img').style, styles[14]);
-	Object.assign(document.querySelector('.sticky__footer_list_3 a').style, styles[15]);
-	Object.assign(document.querySelector('.sticky__footer_list_3 a img').style, styles[16]);
+	if (contactSize == 3) {
+		Object.assign(document.querySelector('.sticky__footer_list_whatsapp a').style, styles[11]);
+		Object.assign(document.querySelector('.sticky__footer_list_whatsapp a img').style, styles[12]);
+	}
+	Object.assign(document.querySelector('.sticky__footer_list_call a').style, styles[13]);
+	Object.assign(document.querySelector('.sticky__footer_list_call a img').style, styles[14]);
+	Object.assign(document.querySelector('.sticky__footer_list_email a').style, styles[15]);
+	Object.assign(document.querySelector('.sticky__footer_list_email a img').style, styles[16]);
 
 	Object.assign(ripple1.style, styles[17]);
 	Object.assign(ripple2.style, styles[18]);
@@ -369,7 +394,7 @@ function addEffects() {
 				  duration: 1400
 				});
 			}, 300)
-			document.querySelector('.sticky__footer_btn img').setAttribute('src', cancelIcon);
+			document.querySelector('.sticky__footer_btn img').setAttribute('src', cancelIconImg);
 		}else{
 			anime({
 			  targets: '.sticky__footer_popup',

@@ -1,0 +1,1 @@
+Pages [Demo 1](https://cjcoaustralia.github.io/sticky-footer-cdn/) and [Demo 2](https://cjcoaustralia.github.io/sticky-footer-cdn/index2.html).
