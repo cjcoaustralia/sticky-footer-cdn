@@ -36,7 +36,7 @@ var contactSize, contactIconUrl, contactUrl, contactType, contactText;
 
 function addStickyFooter(){
 
-	const footer = document.querySelectorAll('footer')[0];
+	const parent = document.body;
 	const stickyContainer = document.createElement('div');
 	stickyContainer.classList = 'sticky__footer_container';
 
@@ -82,7 +82,7 @@ function addStickyFooter(){
 		stickyContainerList.append(SFLinkListItem);
 	}
 
-	footer.append(stickyContainer);
+	parent.append(stickyContainer);
 	stickyContainer.append(stickyContainerList);
 
 	// Styles

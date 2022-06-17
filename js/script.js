@@ -36,10 +36,10 @@ var contactSize, contactIconUrl, contactUrl, contactType;
 
 function addStickyFooter(){
 
-	const footer = document.querySelectorAll('footer')[0];
+	const parent = document.body;
 	const stickyContainer = document.createElement('div');
 	stickyContainer.classList = 'sticky__footer_container';
-	footer.append(stickyContainer);
+	parent.append(stickyContainer);
 	// btn
 	const callBtn = document.createElement('button');
 	callBtn.setAttribute('aria-label', 'Call us');
